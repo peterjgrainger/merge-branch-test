@@ -19,6 +19,6 @@ jobs:
       - uses: arup-group/merge-branch@master
         with:
           commitMessage: 'test'
-          base: test
+          base: master
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
