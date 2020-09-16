@@ -20,7 +20,6 @@ jobs:
 
     # This state is the same as the on the PR. If the PR has a green merge button the output will be a "clean" mergeable status
     steps:
-      - run: ${{ github.event.check_run.name }}
 
       # Makes an API call to trigger a merge on the remote. i.e. no code is checked out.
       - name: Merge Branch
