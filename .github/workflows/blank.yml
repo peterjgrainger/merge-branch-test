@@ -1,23 +1,34 @@
-# This is a basic workflow to help you get started with Actions
+# This workflow needs to be in the develop branch for it to work. All changes on branches will not take effect until merged
 
-name: CI
+# This workflow runs when any check completes. It will merge the branch used for the check on the following conditions
+# - The Check is successful and the check name is "All Projects"
+# - The PR is in a mergable state (this depends on the branch protection settings of the repo)
+# - The branch is not conflicted with develop
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
-on: push
+name: Auto Merge
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# Controls when the action will run. Triggers the workflow on completed check run
+on: 
+  check_run:
+    types: [completed]
+    
+
 jobs:
-  # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    # This state is the same as the on the PR. If the PR has a green merge button the output will be a "clean" mergeable status
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: arup-group/merge-branch@master
+      - run: ${{ github.event.check_run.name }}
+
+      # Makes an API call to trigger a merge on the remote. i.e. no code is checked out.
+      - name: Merge Branch
+        if: ${{ github.event.check_run.conclusion == 'success' && github.event.check_run.name == 'test/test' }}
+        uses: Hatzelencio/merge-branch@v0.0.2
         with:
-          base: master
+          head: ${{ github.event.check_run.pull_requests[0].head.ref }}
+          base: ${{ github.event.check_run.pull_requests[0].base.ref }}
+          commitMessage: "Merge pull request #${{ github.event.check_run.pull_requests[0].number }} from {{ github.ref }}"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
