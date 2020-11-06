@@ -32,7 +32,7 @@ jobs:
       - name: Check PR can be merged
         id: approveMerge
         if: steps.check.outputs.merge == 'true'
-        uses: arup-group/is-pr-mergable
+        uses: arup-group/is-pr-mergable@main
         with:
           pull_number: ${{ github.event.check_run.pull_requests[0].number }}
         env:
