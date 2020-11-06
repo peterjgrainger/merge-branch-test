@@ -23,7 +23,7 @@ jobs:
         if: github.event.check_run.conclusion == 'success' && github.event.check_run.name == 'All Projects' && github.event.check_run.pull_requests[0].base.ref == 'master'
         id: check
         run: |
-          echo "::set-output merge=::true"
+          echo "::set-output name=merge::true"
         
       - name: Sleep if this check is all projects
         if: steps.check.outputs.merge == 'true'
