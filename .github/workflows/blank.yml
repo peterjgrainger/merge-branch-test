@@ -39,7 +39,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Trigger PR merge
-        if: steps.approveMerge.outputs.mergeable_status == 'clean'
+        if: steps.approveMerge.outputs.mergeable_state == 'clean'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
